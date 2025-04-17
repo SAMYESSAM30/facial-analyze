@@ -1,7 +1,12 @@
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-type Theme = 'light' | 'dark';
+type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -11,34 +16,40 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  // تغيير القيمة الافتراضية إلى "light"
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    // Check if user has a preferred theme stored
-    const storedTheme = localStorage.getItem('theme') as Theme | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+    // التحقق من وجود تفضيلات المستخدم المخزنة
+    const storedTheme = localStorage.getItem("theme") as Theme | null;
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    // تطبيق التفضيل المخزن إذا وجد، وإلا البقاء على الوضع الفاتح
     if (storedTheme) {
       setTheme(storedTheme);
-    } else if (prefersDark) {
-      setTheme('dark');
     }
+    // يمكنك حذف هذا الشرط إذا كنت تريد تجاهل تفضيلات النظام
+    // else if (prefersDark) {
+    //   setTheme("dark");
+    // }
   }, []);
 
   useEffect(() => {
-    // Update the class on the document element when theme changes
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+    // تحديث class على عنصر document عند تغيير الموضوع
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
-    
-    // Store theme preference
-    localStorage.setItem('theme', theme);
+
+    // تخزين تفضيلات الموضوع
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   return (
@@ -51,7 +62,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };

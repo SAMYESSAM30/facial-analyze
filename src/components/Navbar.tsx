@@ -68,15 +68,16 @@ const Navbar: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 p-4">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleLanguage}
                 aria-label="Toggle language"
               >
-                <Globe className="h-[1.2rem] w-[1.2rem]" />
-                <span className="ml-1 text-sm font-medium">
+                <span className="ml-1 text-sm font-medium flex items-center gap-1">
+                  {" "}
+                  <Globe className="h-[1rem] w-[1rem]" />
                   {language === "en" ? "AR" : "EN"}
                 </span>
               </Button>

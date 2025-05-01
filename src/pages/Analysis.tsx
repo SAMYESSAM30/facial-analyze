@@ -328,7 +328,7 @@ const Analysis: React.FC = () => {
                         className="w-full h-auto"
                       />
                     </div>
-                    <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
+                    {/* <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
                       <h3 className="font-bold mb-2">
                         Skin Type: {analysisResults?.skinType}
                       </h3>
@@ -336,7 +336,7 @@ const Analysis: React.FC = () => {
                         Your skin shows characteristics of both dry and oily
                         areas. This is typical of combination skin.
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
                     <h3 className="font-bold mb-2">

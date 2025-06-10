@@ -28,23 +28,19 @@ const About: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl font-bold mb-6 font-playfair">
-                Computer Vision Technology
+                {t("about.techTitle")}
               </h2>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Our advanced computer vision algorithms analyze your facial
-                features and skin texture to identify various skin concerns with
-                precision.
+                {t("about.techDesc1")}
               </p>
               <p className="text-gray-700 dark:text-gray-300">
-                Using thousands of data points from your uploaded image, our AI
-                can detect dark spots, wrinkles, enlarged pores, redness,
-                dryness, oiliness, and uneven skin tone.
+                {t("about.techDesc2")}
               </p>
             </div>
             <div className="rounded-xl overflow-hidden shadow-xl">
               <img
                 src="https://images.unsplash.com/photo-1644794472051-36d154dfe487?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="AI technology visualization"
+                alt={t("about.techImageAlt")}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -56,35 +52,34 @@ const About: React.FC = () => {
       <section className="py-20 px-4 md:px-6 bg-skin-pink-light/50 dark:bg-skin-dark-gray">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-12 text-center font-playfair">
-            Benefits of AI Skin Analysis
+            {t("about.benefitsTitle")}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="glass-card p-8 rounded-xl">
               <h3 className="text-xl font-bold mb-4">
-                Personalized Recommendations
+                {t("about.benefit1.title")}
               </h3>
               <p className="text-gray-700 dark:text-gray-300">
-                Receive product recommendations tailored specifically to your
-                skin's unique needs and concerns.
-              </p>
-            </div>
-
-            <div className="glass-card p-8 rounded-xl">
-              <h3 className="text-xl font-bold mb-4">Save Time and Money</h3>
-              <p className="text-gray-700 dark:text-gray-300">
-                Avoid purchasing products that don't address your specific skin
-                issues and focus on what truly works for you.
+                {t("about.benefit1.desc")}
               </p>
             </div>
 
             <div className="glass-card p-8 rounded-xl">
               <h3 className="text-xl font-bold mb-4">
-                Track Progress Over Time
+                {t("about.benefit2.title")}
               </h3>
               <p className="text-gray-700 dark:text-gray-300">
-                Monitor how your skin improves with recommended treatments by
-                analyzing changes in your skin condition.
+                {t("about.benefit2.desc")}
+              </p>
+            </div>
+
+            <div className="glass-card p-8 rounded-xl">
+              <h3 className="text-xl font-bold mb-4">
+                {t("about.benefit3.title")}
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300">
+                {t("about.benefit3.desc")}
               </p>
             </div>
           </div>
@@ -96,24 +91,16 @@ const About: React.FC = () => {
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-8 text-center font-playfair">
-              Our Research
+              {t("about.researchTitle")}
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Our AI model has been trained on a diverse dataset of over 100,000
-              facial images representing various skin types, tones, and
-              conditions. This extensive training ensures accurate analysis
-              across different ethnicities and age groups.
+              {t("about.researchDesc1")}
             </p>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              We've collaborated with dermatologists and skincare experts to
-              validate our technology, ensuring that the recommendations align
-              with professional skincare practices and principles.
+              {t("about.researchDesc2")}
             </p>
             <p className="text-gray-700 dark:text-gray-300">
-              The system continually improves through machine learning, becoming
-              more accurate with each analysis performed. Your privacy is our
-              priority - all images are processed securely and not stored beyond
-              the analysis period.
+              {t("about.researchDesc3")}
             </p>
           </div>
         </div>

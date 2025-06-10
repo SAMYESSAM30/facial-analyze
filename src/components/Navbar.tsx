@@ -2,15 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import {
-  Sun,
-  Moon,
-  Globe,
-  Menu,
-  X,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Sun, Moon, Globe, Menu, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -33,7 +25,6 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: t("nav.home"), path: "/" },
     { name: t("nav.about"), path: "/about" },
-    { name: t("nav.products"), path: "/products" },
     { name: t("nav.analysis"), path: "/analysis" },
   ];
 

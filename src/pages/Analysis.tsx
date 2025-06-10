@@ -219,7 +219,7 @@ const Analysis: React.FC = () => {
                 <div className="flex flex-col items-center">
                   <div className="mb-8 max-w-lg text-center">
                     <h2 className="text-2xl font-bold mb-4">
-                      Upload Your Photo
+                      {t("analysis.upload.title")}
                     </h2>
                     <p className="text-gray-700 dark:text-gray-300">
                       {t("analysis.guidelines")}
@@ -234,11 +234,13 @@ const Analysis: React.FC = () => {
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="w-10 h-10 mb-3 text-gray-400" />
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">Click to upload</span>{" "}
-                          or drag and drop
+                          <span className="font-semibold">
+                            {t("analysis.upload.click")}
+                          </span>{" "}
+                          {t("analysis.upload.drag")}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          JPEG, PNG or JPG (MAX. 5MB)
+                          {t("analysis.upload.formats")}
                         </p>
                       </div>
                       <input
@@ -274,23 +276,23 @@ const Analysis: React.FC = () => {
                     {analyzing ? (
                       <div className="text-center mb-4">
                         <h2 className="text-2xl font-bold mb-4">
-                          Analyzing Your Skin...
+                          {t("analysis.analyzing")}
                         </h2>
                         <Progress value={progress} className="h-2 mb-2" />
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {progress}% complete
+                          {progress}% {t("analysis.complete")}
                         </p>
                       </div>
                     ) : (
                       <h2 className="text-2xl font-bold mb-4 text-center">
-                        Review Your Photo
+                        {t("analysis.review")}
                       </h2>
                     )}
 
                     <div className="relative border rounded-lg overflow-hidden">
                       <img
                         src={previewUrl}
-                        alt="Uploaded face"
+                        alt={t("analysis.uploaded_alt")}
                         className="w-full h-auto"
                       />
                     </div>
@@ -300,10 +302,10 @@ const Analysis: React.FC = () => {
                     {!analyzing && (
                       <>
                         <Button variant="outline" onClick={resetAnalysis}>
-                          Change Photo
+                          {t("analysis.change_photo")}
                         </Button>
                         <Button className="btn-primary" onClick={analyzeSkin}>
-                          Analyze Skin
+                          {t("analysis.analyze")}
                         </Button>
                       </>
                     )}
@@ -324,92 +326,86 @@ const Analysis: React.FC = () => {
                     <div className="border rounded-lg overflow-hidden">
                       <img
                         src={previewUrl!}
-                        alt="Analyzed face"
+                        alt={t("analysis.analyzed_alt")}
                         className="w-full h-auto"
                       />
                     </div>
-                    {/* <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
+                    <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
                       <h3 className="font-bold mb-2">
-                        Skin Type: {analysisResults?.skinType}
+                        {t("analysis.skin_type")}{" "}
+                        {analysisResults?.predicted_class}
                       </h3>
-                      <p className="text-sm text-gray-700 dark:text-gray-300">
-                        Your skin shows characteristics of both dry and oily
-                        areas. This is typical of combination skin.
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        {t("analysis.confidence")}{" "}
+                        {(analysisResults?.confidence * 100).toFixed(2)}%
                       </p>
-                    </div> */}
-                  </div>
-                  <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
-                    <h3 className="font-bold mb-2">
-                      Skin Type: {analysisResults?.predicted_class}
-                    </h3>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                      Confidence:{" "}
-                      {(analysisResults?.confidence * 100).toFixed(2)}%
-                    </p>
 
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Oily</span>
-                          <span>
-                            {(
+                      <div className="space-y-2">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{t("analysis.oily")}</span>
+                            <span>
+                              {(
+                                analysisResults?.all_probabilities.oily * 100
+                              ).toFixed(2)}
+                              %
+                            </span>
+                          </div>
+                          <Progress
+                            value={
                               analysisResults?.all_probabilities.oily * 100
-                            ).toFixed(2)}
-                            %
-                          </span>
+                            }
+                            className="h-2"
+                          />
                         </div>
-                        <Progress
-                          value={analysisResults?.all_probabilities.oily * 100}
-                          className="h-2"
-                        />
-                      </div>
 
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Dry</span>
-                          <span>
-                            {(
-                              analysisResults?.all_probabilities.dry * 100
-                            ).toFixed(2)}
-                            %
-                          </span>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{t("analysis.dry")}</span>
+                            <span>
+                              {(
+                                analysisResults?.all_probabilities.dry * 100
+                              ).toFixed(2)}
+                              %
+                            </span>
+                          </div>
+                          <Progress
+                            value={analysisResults?.all_probabilities.dry * 100}
+                            className="h-2"
+                          />
                         </div>
-                        <Progress
-                          value={analysisResults?.all_probabilities.dry * 100}
-                          className="h-2"
-                        />
-                      </div>
 
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Normal</span>
-                          <span>
-                            {(
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{t("analysis.normal")}</span>
+                            <span>
+                              {(
+                                analysisResults?.all_probabilities.normal * 100
+                              ).toFixed(2)}
+                              %
+                            </span>
+                          </div>
+                          <Progress
+                            value={
                               analysisResults?.all_probabilities.normal * 100
-                            ).toFixed(2)}
-                            %
-                          </span>
+                            }
+                            className="h-2"
+                          />
                         </div>
-                        <Progress
-                          value={
-                            analysisResults?.all_probabilities.normal * 100
-                          }
-                          className="h-2"
-                        />
                       </div>
-                    </div>
 
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-3">
-                      {analysisResults?.predicted_class === "oily"
-                        ? "Your skin tends to produce excess sebum, typical of oily skin type."
-                        : analysisResults?.predicted_class === "dry"
-                        ? "Your skin lacks sufficient moisture, typical of dry skin type."
-                        : "Your skin is well-balanced, typical of normal skin type."}
-                    </p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-3">
+                        {analysisResults?.predicted_class === "oily"
+                          ? t("skin_descriptions.oily")
+                          : analysisResults?.predicted_class === "dry"
+                          ? t("skin_descriptions.dry")
+                          : t("skin_descriptions.normal")}
+                      </p>
+                    </div>
                   </div>
                   <div className="md:w-2/3">
                     <h3 className="text-xl font-bold mb-4">
-                      Identified Concerns
+                      {t("analysis.concerns")}
                     </h3>
 
                     <div className="space-y-4">
@@ -455,14 +451,16 @@ const Analysis: React.FC = () => {
                       </div>
                       <h3 className="font-bold mb-2">{rec.name}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                        Recommended for your{" "}
+                        {t("analysis.recommended_for")}{" "}
                         {analysisResults.concerns[
                           rec.id % analysisResults.concerns.length
                         ].name.toLowerCase()}{" "}
-                        concerns.
+                        {t("analysis.concerns")}.
                       </p>
                       <Button asChild className="mt-auto" variant="outline">
-                        <a href={`/products?id=${rec.id}`}>View Product</a>
+                        <a href={`/products?id=${rec.id}`}>
+                          {t("analysis.view_product")}
+                        </a>
                       </Button>
                     </div>
                   ))}
@@ -474,10 +472,10 @@ const Analysis: React.FC = () => {
                     onClick={resetAnalysis}
                     className="mr-4"
                   >
-                    Try Another Photo
+                    {t("analysis.try_another")}
                   </Button>
                   <Button asChild className="btn-primary">
-                    <a href="/products">View All Products</a>
+                    <a href="/products">{t("analysis.view_all_products")}</a>
                   </Button>
                 </div>
               </div>
@@ -490,7 +488,7 @@ const Analysis: React.FC = () => {
       <Dialog open={cameraOpen} onOpenChange={(open) => !open && closeCamera()}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Take a Photo</DialogTitle>
+            <DialogTitle>{t("camera.title")}</DialogTitle>
           </DialogHeader>
           <div className="relative aspect-video overflow-hidden rounded-md bg-black">
             <video
@@ -507,10 +505,10 @@ const Analysis: React.FC = () => {
               className="bg-skin-purple hover:bg-skin-purple-dark text-white"
             >
               <Camera className="mr-2 h-4 w-4" />
-              Capture
+              {t("camera.capture")}
             </Button>
             <Button variant="outline" onClick={closeCamera}>
-              Cancel
+              {t("camera.cancel")}
             </Button>
           </DialogFooter>
         </DialogContent>

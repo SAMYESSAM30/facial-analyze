@@ -164,7 +164,7 @@ const Index: React.FC = () => {
       </section>
 
       {/* Testimonials Slider Section */}
-      <section className="py-20 px-4 md:px-6 bg-skin-pink-light/30 dark:bg-skin-dark-gray/70">
+      {/* <section className="py-20 px-4 md:px-6 bg-skin-pink-light/30 dark:bg-skin-dark-gray/70">
         <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 font-playfair">
             {t("testimonials.title")}
@@ -227,10 +227,10 @@ const Index: React.FC = () => {
             <CarouselNext className="right-1" />
           </Carousel>
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Products Section */}
-      <section className="py-20 px-4 md:px-6 bg-white dark:bg-skin-dark">
+      {/* <section className="py-20 px-4 md:px-6 bg-white dark:bg-skin-dark">
         <div className="container mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-12">
             <div>
@@ -281,7 +281,7 @@ const Index: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* About Preview Section */}
       <section className="py-20 px-4 md:px-6 bg-skin-pink-light/50 dark:bg-skin-dark-gray">

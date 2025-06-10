@@ -26,15 +26,37 @@ const Analysis: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Mock analysis results
   const [analysisResults, setAnalysisResults] = useState<any>(null);
+
+  // الحصول على بيانات نوع البشرة بشكل آمن
+  const getSkinAnalysisData = () => {
+    if (!analysisResults?.phase1) {
+      return {
+        predicted_class: "unknown",
+        confidence: 0,
+        all_probabilities: {
+          oily: 0,
+          dry: 0,
+          normal: 0,
+        },
+      };
+    }
+    return {
+      predicted_class: analysisResults.phase1.predicted_class || "unknown",
+      confidence: analysisResults.phase1.confidence || 0,
+      all_probabilities: analysisResults.phase1.all_probabilities || {
+        oily: 0,
+        dry: 0,
+        normal: 0,
+      },
+    };
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
 
-      // Create a preview URL
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result as string);
@@ -87,14 +109,10 @@ const Analysis: React.FC = () => {
     if (video && canvas) {
       const context = canvas.getContext("2d");
       if (context) {
-        // Set canvas dimensions to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-
-        // Draw video frame to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert to data URL and create file
         canvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], "camera-photo.jpg", {
@@ -124,11 +142,10 @@ const Analysis: React.FC = () => {
     setProgress(0);
 
     try {
-      // Create FormData and append the image file
       const formData = new FormData();
       formData.append("image", file);
 
-      // Simulate progress while uploading
+      // Simulate upload progress
       const uploadInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 50) {
@@ -139,8 +156,7 @@ const Analysis: React.FC = () => {
         });
       }, 200);
 
-      // Send the image to API
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("http://127.0.0.1:8000/analyze", {
         method: "POST",
         body: formData,
       });
@@ -148,13 +164,17 @@ const Analysis: React.FC = () => {
       clearInterval(uploadInterval);
 
       if (!response.ok) {
-        throw new Error("API request failed");
+        throw new Error(`API request failed with status ${response.status}`);
       }
 
-      // Parse the API response
       const data = await response.json();
 
-      // Simulate analysis progress after upload
+      // Validate response structure
+      if (!data.phase1 || !data.phase2) {
+        throw new Error("Invalid API response structure");
+      }
+
+      // Simulate analysis progress
       const analysisInterval = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev + 2;
@@ -162,27 +182,24 @@ const Analysis: React.FC = () => {
             clearInterval(analysisInterval);
             setAnalyzing(false);
             setAnalysisComplete(true);
-            setAnalysisResults(data); // Set the actual API response
+            setAnalysisResults(data);
             return 100;
           }
           return newProgress;
         });
       }, 200);
-
-      return () => {
-        clearInterval(uploadInterval);
-        clearInterval(analysisInterval);
-      };
     } catch (error) {
       console.error("Error analyzing image:", error);
+      setAnalyzing(false);
+      setProgress(0);
       toast({
         title: "Analysis Failed",
         description:
-          "There was an error analyzing your image. Please try again.",
+          error instanceof Error
+            ? error.message
+            : "There was an error analyzing your image",
         variant: "destructive",
       });
-      setAnalyzing(false);
-      setProgress(0);
     }
   };
 
@@ -193,6 +210,39 @@ const Analysis: React.FC = () => {
     setAnalysisComplete(false);
     setAnalysisResults(null);
   };
+
+  // Render detection boxes with safe access
+  const renderDetectionBoxes = (detections: any[] = [], type: string) => {
+    if (!detections || detections.length === 0) return null;
+
+    const boxColors: Record<string, string> = {
+      acne: "border-red-500 bg-red-500/20",
+      blackheads: "border-green-500 bg-green-500/20",
+      dark_circles: "border-blue-500 bg-blue-500/20",
+      pigmentation: "border-yellow-500 bg-yellow-500/20",
+    };
+
+    return detections.map((detection, index) => (
+      <div
+        key={index}
+        className={`absolute border-2 ${
+          boxColors[type] || "border-purple-500 bg-purple-500/20"
+        }`}
+        style={{
+          left: `${detection.box?.[0] || 0}px`,
+          top: `${detection.box?.[1] || 0}px`,
+          width: `${(detection.box?.[2] || 0) - (detection.box?.[0] || 0)}px`,
+          height: `${(detection.box?.[3] || 0) - (detection.box?.[1] || 0)}px`,
+        }}
+      >
+        <span className="absolute -top-6 left-0 text-xs font-medium text-white bg-black/70 px-1 rounded">
+          {type} {index + 1}
+        </span>
+      </div>
+    ));
+  };
+
+  const skinData = getSkinAnalysisData();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -323,108 +373,282 @@ const Analysis: React.FC = () => {
 
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/3">
-                    <div className="border rounded-lg overflow-hidden">
+                    <div className="border rounded-lg overflow-hidden relative">
                       <img
                         src={previewUrl!}
                         alt={t("analysis.analyzed_alt")}
                         className="w-full h-auto"
                       />
+                      {analysisResults?.phase2?.acne?.detections &&
+                        renderDetectionBoxes(
+                          analysisResults.phase2.acne.detections,
+                          "acne"
+                        )}
+                      {analysisResults?.phase2?.blackheads?.detections &&
+                        renderDetectionBoxes(
+                          analysisResults.phase2.blackheads.detections,
+                          "blackheads"
+                        )}
+                      {analysisResults?.phase2?.dark_circles?.detections &&
+                        renderDetectionBoxes(
+                          analysisResults.phase2.dark_circles.detections,
+                          "dark_circles"
+                        )}
+                      {analysisResults?.phase2?.pigmentation?.detections &&
+                        renderDetectionBoxes(
+                          analysisResults.phase2.pigmentation.detections,
+                          "pigmentation"
+                        )}
                     </div>
                     <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
                       <h3 className="font-bold mb-2">
-                        {t("analysis.skin_type")}{" "}
-                        {analysisResults?.predicted_class}
+                        {t("analysis.skin_type")} {skinData.predicted_class}
                       </h3>
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                        {t("analysis.confidence")}{" "}
-                        {(analysisResults?.confidence * 100).toFixed(2)}%
+                        {t("analysis.confidence")} {skinData.confidence * 100}%
                       </p>
 
                       <div className="space-y-2">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>{t("analysis.oily")}</span>
+                            <span>Oily</span>
                             <span>
-                              {(
-                                analysisResults?.all_probabilities.oily * 100
-                              ).toFixed(2)}
+                              {(skinData.all_probabilities.oily * 100).toFixed(
+                                2
+                              )}
                               %
                             </span>
                           </div>
                           <Progress
-                            value={
-                              analysisResults?.all_probabilities.oily * 100
-                            }
+                            value={skinData.all_probabilities.oily * 100}
                             className="h-2"
                           />
                         </div>
 
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>{t("analysis.dry")}</span>
+                            <span>Dry</span>
                             <span>
-                              {(
-                                analysisResults?.all_probabilities.dry * 100
-                              ).toFixed(2)}
+                              {(skinData.all_probabilities.dry * 100).toFixed(
+                                2
+                              )}
                               %
                             </span>
                           </div>
                           <Progress
-                            value={analysisResults?.all_probabilities.dry * 100}
+                            value={skinData.all_probabilities.dry * 100}
                             className="h-2"
                           />
                         </div>
 
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>{t("analysis.normal")}</span>
+                            <span>Normal</span>
                             <span>
                               {(
-                                analysisResults?.all_probabilities.normal * 100
+                                skinData.all_probabilities.normal * 100
                               ).toFixed(2)}
                               %
                             </span>
                           </div>
                           <Progress
-                            value={
-                              analysisResults?.all_probabilities.normal * 100
-                            }
+                            value={skinData.all_probabilities.normal * 100}
                             className="h-2"
                           />
                         </div>
                       </div>
-
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-3">
-                        {analysisResults?.predicted_class === "oily"
-                          ? t("skin_descriptions.oily")
-                          : analysisResults?.predicted_class === "dry"
-                          ? t("skin_descriptions.dry")
-                          : t("skin_descriptions.normal")}
-                      </p>
                     </div>
                   </div>
                   <div className="md:w-2/3">
                     <h3 className="text-xl font-bold mb-4">
-                      {t("analysis.concerns")}
+                      {t("analysis.detailed_results")}
                     </h3>
 
                     <div className="space-y-4">
-                      {analysisResults?.concerns?.map((concern: any) => (
-                        <div
-                          key={concern.name}
-                          className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg"
-                        >
-                          <div className="flex justify-between mb-2">
-                            <span className="font-semibold">
-                              {concern.name}
-                            </span>
-                            <span className="text-skin-purple-dark">
-                              {concern.severity}
-                            </span>
+                      {/* Acne Results */}
+                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                        <h4 className="font-bold mb-2">Acne</h4>
+                        {analysisResults?.phase2?.acne?.detections?.length >
+                        0 ? (
+                          <div>
+                            <p className="mb-2">
+                              Detected:{" "}
+                              {analysisResults.phase2.acne.detections.length}{" "}
+                              areas
+                            </p>
+                            <div className="grid grid-cols-1 gap-2">
+                              {analysisResults.phase2.acne.detections.map(
+                                (detection: any, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
+                                  >
+                                    <p>
+                                      Area {index + 1}: X1=
+                                      {detection.box?.[0] || 0}, Y1=
+                                      {detection.box?.[1] || 0}, X2=
+                                      {detection.box?.[2] || 0}, Y2=
+                                      {detection.box?.[3] || 0}
+                                    </p>
+                                    <p>
+                                      Width:{" "}
+                                      {(detection.box?.[2] || 0) -
+                                        (detection.box?.[0] || 0)}
+                                      px, Height:{" "}
+                                      {(detection.box?.[3] || 0) -
+                                        (detection.box?.[1] || 0)}
+                                      px
+                                    </p>
+                                  </div>
+                                )
+                              )}
+                            </div>
                           </div>
-                          <Progress value={concern.score} className="h-2" />
-                        </div>
-                      ))}
+                        ) : (
+                          <p>No acne detected</p>
+                        )}
+                      </div>
+
+                      {/* Blackheads Results */}
+                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                        <h4 className="font-bold mb-2">Blackheads</h4>
+                        {analysisResults?.phase2?.blackheads?.detections
+                          ?.length > 0 ? (
+                          <div>
+                            <p className="mb-2">
+                              Detected:{" "}
+                              {
+                                analysisResults.phase2.blackheads.detections
+                                  .length
+                              }{" "}
+                              areas
+                            </p>
+                            <div className="grid grid-cols-1 gap-2">
+                              {analysisResults.phase2.blackheads.detections.map(
+                                (detection: any, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
+                                  >
+                                    <p>
+                                      Area {index + 1}: X1=
+                                      {detection.box?.[0] || 0}, Y1=
+                                      {detection.box?.[1] || 0}, X2=
+                                      {detection.box?.[2] || 0}, Y2=
+                                      {detection.box?.[3] || 0}
+                                    </p>
+                                    <p>
+                                      Width:{" "}
+                                      {(detection.box?.[2] || 0) -
+                                        (detection.box?.[0] || 0)}
+                                      px, Height:{" "}
+                                      {(detection.box?.[3] || 0) -
+                                        (detection.box?.[1] || 0)}
+                                      px
+                                    </p>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <p>No blackheads detected</p>
+                        )}
+                      </div>
+
+                      {/* Dark Circles Results */}
+                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                        <h4 className="font-bold mb-2">Dark Circles</h4>
+                        {analysisResults?.phase2?.dark_circles?.detections
+                          ?.length > 0 ? (
+                          <div>
+                            <p className="mb-2">
+                              Detected:{" "}
+                              {
+                                analysisResults.phase2.dark_circles.detections
+                                  .length
+                              }{" "}
+                              areas
+                            </p>
+                            <div className="grid grid-cols-1 gap-2">
+                              {analysisResults.phase2.dark_circles.detections.map(
+                                (detection: any, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
+                                  >
+                                    <p>
+                                      Area {index + 1}: X1=
+                                      {detection.box?.[0] || 0}, Y1=
+                                      {detection.box?.[1] || 0}, X2=
+                                      {detection.box?.[2] || 0}, Y2=
+                                      {detection.box?.[3] || 0}
+                                    </p>
+                                    <p>
+                                      Width:{" "}
+                                      {(detection.box?.[2] || 0) -
+                                        (detection.box?.[0] || 0)}
+                                      px, Height:{" "}
+                                      {(detection.box?.[3] || 0) -
+                                        (detection.box?.[1] || 0)}
+                                      px
+                                    </p>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <p>No dark circles detected</p>
+                        )}
+                      </div>
+
+                      {/* Pigmentation Results */}
+                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                        <h4 className="font-bold mb-2">Pigmentation</h4>
+                        {analysisResults?.phase2?.pigmentation?.detections
+                          ?.length > 0 ? (
+                          <div>
+                            <p className="mb-2">
+                              Detected:{" "}
+                              {
+                                analysisResults.phase2.pigmentation.detections
+                                  .length
+                              }{" "}
+                              areas
+                            </p>
+                            <div className="grid grid-cols-1 gap-2">
+                              {analysisResults.phase2.pigmentation.detections.map(
+                                (detection: any, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
+                                  >
+                                    <p>
+                                      Area {index + 1}: X1=
+                                      {detection.box?.[0] || 0}, Y1=
+                                      {detection.box?.[1] || 0}, X2=
+                                      {detection.box?.[2] || 0}, Y2=
+                                      {detection.box?.[3] || 0}
+                                    </p>
+                                    <p>
+                                      Width:{" "}
+                                      {(detection.box?.[2] || 0) -
+                                        (detection.box?.[0] || 0)}
+                                      px, Height:{" "}
+                                      {(detection.box?.[3] || 0) -
+                                        (detection.box?.[1] || 0)}
+                                      px
+                                    </p>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <p>No pigmentation detected</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -436,36 +660,6 @@ const Analysis: React.FC = () => {
                   {t("analysis.recommendations")}
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {analysisResults?.recommendations?.map((rec: any) => (
-                    <div
-                      key={rec.id}
-                      className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-6 rounded-lg flex flex-col items-center text-center animated-card"
-                    >
-                      <div className="w-16 h-16 bg-skin-purple/20 rounded-full flex items-center justify-center mb-4">
-                        <img
-                          src={`https://picsum.photos/seed/${rec.id}/200/200`}
-                          alt={rec.name}
-                          className="w-10 h-10 object-cover rounded-full"
-                        />
-                      </div>
-                      <h3 className="font-bold mb-2">{rec.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                        {t("analysis.recommended_for")}{" "}
-                        {analysisResults.concerns[
-                          rec.id % analysisResults.concerns.length
-                        ].name.toLowerCase()}{" "}
-                        {t("analysis.concerns")}.
-                      </p>
-                      <Button asChild className="mt-auto" variant="outline">
-                        <a href={`/products?id=${rec.id}`}>
-                          {t("analysis.view_product")}
-                        </a>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-
                 <div className="mt-8 text-center">
                   <Button
                     variant="outline"
@@ -474,9 +668,9 @@ const Analysis: React.FC = () => {
                   >
                     {t("analysis.try_another")}
                   </Button>
-                  <Button asChild className="btn-primary">
+                  {/* <Button asChild className="btn-primary">
                     <a href="/products">{t("analysis.view_all_products")}</a>
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>

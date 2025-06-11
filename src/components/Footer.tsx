@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               to="/"
               className="text-2xl font-playfair font-bold gradient-text"
             >
-              GlowSkin
+              PureSkin
             </Link>
             <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 max-w-xs">
               {t("footer.description") ||
@@ -70,14 +70,7 @@ const Footer: React.FC = () => {
                   {t("nav.about")}
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/products"
-                  className="text-gray-600 hover:text-skin-purple dark:text-gray-300 transition-colors"
-                >
-                  {t("nav.products")}
-                </Link>
-              </li>
+
               <li>
                 <Link
                   to="/analysis"
@@ -94,7 +87,7 @@ const Footer: React.FC = () => {
               {t("footer.contact") || "Contact Us"}
             </h3>
             <p className="text-gray-600 dark:text-gray-300">
-              contact@glowskin.ai
+              contact@PureSkin.ai
             </p>
             <p className="text-gray-600 dark:text-gray-300 mt-2">
               +1 (555) 123-4567

@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
             to="/"
             className="text-2xl font-playfair font-bold gradient-text"
           >
-            GlowSkin
+            PureSkin
           </Link>
 
           {/* Desktop Navigation */}
@@ -60,19 +60,6 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-3 p-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleLanguage}
-                aria-label="Toggle language"
-              >
-                <span className="ml-1 text-sm font-medium flex items-center gap-1">
-                  {" "}
-                  <Globe className="h-[1rem] w-[1rem]" />
-                  {language === "en" ? "AR" : "EN"}
-                </span>
-              </Button>
-
               <Button
                 variant="ghost"
                 size="icon"
@@ -127,16 +114,6 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div className="mt-auto mb-8 flex justify-center space-x-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleLanguage}
-                    className="flex items-center space-x-2"
-                  >
-                    <Globe className="h-4 w-4" />
-                    <span>{language === "en" ? "العربية" : "English"}</span>
-                  </Button>
-
                   <Button
                     variant="outline"
                     size="sm"

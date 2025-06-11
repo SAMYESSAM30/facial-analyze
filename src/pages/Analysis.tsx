@@ -400,7 +400,7 @@ const Analysis: React.FC = () => {
                           "pigmentation"
                         )}
                     </div>
-                    <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-skin-dark-gray/50 rounded-lg">
+                    <div className="mt-4 p-4 bg-skin-pink-light/50 dark:bg-primary/20 rounded-lg">
                       <h3 className="font-bold mb-2">
                         {t("analysis.skin_type")} {skinData.predicted_class}
                       </h3>
@@ -466,202 +466,116 @@ const Analysis: React.FC = () => {
 
                     <div className="space-y-4">
                       {/* Acne Results */}
-                      {/* <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                        <h4 className="font-bold mb-2">Acne</h4>
-                        {analysisResults?.phase2?.acne?.detections?.length >
-                        0 ? (
-                          <div>
-                            <p className="mb-2">
-                              Detected:{" "}
-                              {analysisResults.phase2.acne.detections.length}{" "}
-                              areas
-                            </p>
-                            <div className="grid grid-cols-1 gap-2">
-                              {analysisResults.phase2.acne.detections.map(
-                                (detection: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
-                                  >
-                                    <p>
-                                      Area {index + 1}: X1=
-                                      {detection.box?.[0] || 0}, Y1=
-                                      {detection.box?.[1] || 0}, X2=
-                                      {detection.box?.[2] || 0}, Y2=
-                                      {detection.box?.[3] || 0}
-                                    </p>
-                                    <p>
-                                      Width:{" "}
-                                      {(detection.box?.[2] || 0) -
-                                        (detection.box?.[0] || 0)}
-                                      px, Height:{" "}
-                                      {(detection.box?.[3] || 0) -
-                                        (detection.box?.[1] || 0)}
-                                      px
+                      <div className="gap-4 w-full">
+                        {analysisResults?.data?.map((item, index) => (
+                          <div
+                            key={index}
+                            className="bg-skin-pink-light/50 dark:bg-primary/20 p-6 rounded-xl mb-6 flex flex-col md:flex-row gap-6 border border-primary/20 dark:border-primary/30 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            {/* الصورة على اليسار */}
+                            <div className="md:w-1/3 flex-shrink-0">
+                              <img
+                                src={item.result_image}
+                                alt={item.issue}
+                                className="w-full h-full max-h-64 rounded-lg object-cover shadow-md"
+                              />
+                            </div>
+
+                            {/* المحتوى على اليمين */}
+
+                            <div className="md:w-2/3 space-y-4">
+                              <h4 className="font-bold text-xl dark:text-primary-light mb-3">
+                                {item.issue}
+                              </h4>
+                              {item.routine && (
+                                <div className="space-y-4">
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Detection
+                                    </h3>
+                                    <p className="text-gray-700 dark:text-gray-300 pl-2">
+                                      {item?.routine?.description}
                                     </p>
                                   </div>
-                                )
+
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Avoid
+                                    </h3>
+                                    <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
+                                      {item?.routine?.avoid?.map(
+                                        (item, index) => (
+                                          <li key={item} className="pl-1">
+                                            {item}
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Evening Routine
+                                    </h3>
+                                    <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
+                                      {item?.routine?.eveningRoutine?.map(
+                                        (item, index) => (
+                                          <li key={item} className="pl-1">
+                                            {item}
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Morning Routine
+                                    </h3>
+                                    <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
+                                      {item?.routine?.morningRoutine?.map(
+                                        (item, index) => (
+                                          <li key={item} className="pl-1">
+                                            {item}
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Weekly Treatments
+                                    </h3>
+                                    <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
+                                      {item?.routine?.weeklyTreatments?.map(
+                                        (item) => (
+                                          <li key={item} className="pl-1">
+                                            {item}
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200 mb-1 pb-1 border-b border-bleak dark:border-primary/30">
+                                      Product Recommendations
+                                    </h3>
+                                    <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
+                                      {item?.routine?.productRecommendations?.map(
+                                        (item) => (
+                                          <li key={item} className="pl-1">
+                                            {item}
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                </div>
                               )}
                             </div>
                           </div>
-                        ) : (
-                          <p>No acne detected</p>
-                        )}
-                      </div> */}
-                      <div className="flex gap-4 w-full flex-wrap ">
-                        {/* Blackheads Results */}
-                        {analysisResults?.phase2?.blackheads?.result_image !==
-                          null && (
-                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                            <h4 className="font-bold mb-2">Blackheads</h4>
-
-                            <img
-                              src={
-                                analysisResults.phase2.blackheads.result_image
-                              }
-                              alt="Blackheads img"
-                              className={"border-purple-500 bg-purple-500/20"}
-                            />
-                          </div>
-                        )}
-
-                        {/* Acne Results */}
-                        {analysisResults?.phase2?.acne?.result_image !==
-                          null && (
-                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                            <h4 className="font-bold mb-2">Acne</h4>
-
-                            <img
-                              src={analysisResults.phase2.acne.result_image}
-                              alt="Blackheads img"
-                            />
-                          </div>
-                        )}
-
-                        {/* Dark Circles Results */}
-                        {analysisResults?.phase2?.dark_circles?.result_image !==
-                          null && (
-                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                            <h4 className="font-bold mb-2">Dark Circles</h4>
-                            {/* {analysisResults?.phase2?.dark_circles?.detections
-                          ?.length > 0 ? (
-                          <div>
-                            <p className="mb-2">
-                              Detected:{" "}
-                              {
-                                analysisResults.phase2.dark_circles.detections
-                                  .length
-                              }{" "}
-                              areas
-                            </p>
-                            <div className="grid grid-cols-1 gap-2">
-                              {analysisResults.phase2.dark_circles.detections.map(
-                                (detection: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
-                                  >
-                                    <p>
-                                      Area {index + 1}: X1=
-                                      {detection.box?.[0] || 0}, Y1=
-                                      {detection.box?.[1] || 0}, X2=
-                                      {detection.box?.[2] || 0}, Y2=
-                                      {detection.box?.[3] || 0}
-                                    </p>
-                                    <p>
-                                      Width:{" "}
-                                      {(detection.box?.[2] || 0) -
-                                        (detection.box?.[0] || 0)}
-                                      px, Height:{" "}
-                                      {(detection.box?.[3] || 0) -
-                                        (detection.box?.[1] || 0)}
-                                      px
-                                    </p>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <p>No dark circles detected</p>
-                        )} */}
-                            <img
-                              src={
-                                analysisResults.phase2.dark_circles.result_image
-                              }
-                              alt="Blackheads img"
-                            />
-                          </div>
-                        )}
-
-                        {/* Pigmentation Results */}
-                        {analysisResults?.phase2?.pigmentation?.result_image !==
-                          null && (
-                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                            <h4 className="font-bold mb-2">Pigmentation</h4>
-                            {/* {analysisResults?.phase2?.pigmentation?.detections
-                          ?.length > 0 ? (
-                          <div>
-                            <p className="mb-2">
-                              Detected:{" "}
-                              {
-                                analysisResults.phase2.pigmentation.detections
-                                  .length
-                              }{" "}
-                              areas
-                            </p>
-                            <div className="grid grid-cols-1 gap-2">
-                              {analysisResults.phase2.pigmentation.detections.map(
-                                (detection: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
-                                  >
-                                    <p>
-                                      Area {index + 1}: X1=
-                                      {detection.box?.[0] || 0}, Y1=
-                                      {detection.box?.[1] || 0}, X2=
-                                      {detection.box?.[2] || 0}, Y2=
-                                      {detection.box?.[3] || 0}
-                                    </p>
-                                    <p>
-                                      Width:{" "}
-                                      {(detection.box?.[2] || 0) -
-                                        (detection.box?.[0] || 0)}
-                                      px, Height:{" "}
-                                      {(detection.box?.[3] || 0) -
-                                        (detection.box?.[1] || 0)}
-                                      px
-                                    </p>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <p>No pigmentation detected</p>
-                        )} */}
-                            <img
-                              src={
-                                analysisResults.phase2.pigmentation.result_image
-                              }
-                              alt="Blackheads img"
-                            />
-                          </div>
-                        )}
-
-                        {/* wrinkles Results */}
-                        {analysisResults?.phase2?.wrinkles?.result_image !==
-                          null && (
-                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                            <h4 className="font-bold mb-2">Wrinkles</h4>
-
-                            <img
-                              src={analysisResults.phase2.wrinkles.result_image}
-                              alt="Blackheads img"
-                            />
-                          </div>
-                        )}
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -674,9 +588,6 @@ const Analysis: React.FC = () => {
                   >
                     {t("analysis.try_another")}
                   </Button>
-                  {/* <Button asChild className="btn-primary">
-                    <a href="/products">{t("analysis.view_all_products")}</a>
-                  </Button> */}
                 </div>
               </div>
 

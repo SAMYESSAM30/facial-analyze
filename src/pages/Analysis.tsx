@@ -228,16 +228,16 @@ const Analysis: React.FC = () => {
         className={`absolute border-2 ${
           boxColors[type] || "border-purple-500 bg-purple-500/20"
         }`}
-        style={{
-          left: `${detection.box?.[0] || 0}px`,
-          top: `${detection.box?.[1] || 0}px`,
-          width: `${(detection.box?.[2] || 0) - (detection.box?.[0] || 0)}px`,
-          height: `${(detection.box?.[3] || 0) - (detection.box?.[1] || 0)}px`,
-        }}
+        // style={{
+        //   left: `${detection.box?.[0] || 0}px`,
+        //   top: `${detection.box?.[1] || 0}px`,
+        //   width: `${(detection.box?.[2] || 0) - (detection.box?.[0] || 0)}px`,
+        //   height: `${(detection.box?.[3] || 0) - (detection.box?.[1] || 0)}px`,
+        // }}
       >
-        <span className="absolute -top-6 left-0 text-xs font-medium text-white bg-black/70 px-1 rounded">
+        {/* <span className="absolute -top-6 left-0 text-xs font-medium text-white bg-black/70 px-1 rounded">
           {type} {index + 1}
-        </span>
+        </span> */}
       </div>
     ));
   };
@@ -262,7 +262,7 @@ const Analysis: React.FC = () => {
 
       {/* Analysis Section */}
       <section className="py-20 px-4 md:px-6 bg-white dark:bg-skin-dark flex-grow">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto ">
           {!analysisComplete ? (
             <div className="glass-card p-8 rounded-xl">
               {!previewUrl ? (
@@ -366,7 +366,7 @@ const Analysis: React.FC = () => {
           ) : (
             <div>
               {/* Analysis Results */}
-              <div className="glass-card p-8 rounded-xl mb-10">
+              <div className="glass-card p-8 rounded-xl mb-10 w-full">
                 <h2 className="text-2xl font-bold mb-6 text-center font-playfair">
                   {t("analysis.results.title")}
                 </h2>
@@ -466,7 +466,7 @@ const Analysis: React.FC = () => {
 
                     <div className="space-y-4">
                       {/* Acne Results */}
-                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                      {/* <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
                         <h4 className="font-bold mb-2">Acne</h4>
                         {analysisResults?.phase2?.acne?.detections?.length >
                         0 ? (
@@ -507,59 +507,43 @@ const Analysis: React.FC = () => {
                         ) : (
                           <p>No acne detected</p>
                         )}
-                      </div>
+                      </div> */}
+                      <div className="flex gap-4 w-full flex-wrap ">
+                        {/* Blackheads Results */}
+                        {analysisResults?.phase2?.blackheads?.result_image !==
+                          null && (
+                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                            <h4 className="font-bold mb-2">Blackheads</h4>
 
-                      {/* Blackheads Results */}
-                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                        <h4 className="font-bold mb-2">Blackheads</h4>
-                        {analysisResults?.phase2?.blackheads?.detections
-                          ?.length > 0 ? (
-                          <div>
-                            <p className="mb-2">
-                              Detected:{" "}
-                              {
-                                analysisResults.phase2.blackheads.detections
-                                  .length
-                              }{" "}
-                              areas
-                            </p>
-                            <div className="grid grid-cols-1 gap-2">
-                              {analysisResults.phase2.blackheads.detections.map(
-                                (detection: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="text-sm bg-gray-100 dark:bg-gray-800 p-2 rounded"
-                                  >
-                                    <p>
-                                      Area {index + 1}: X1=
-                                      {detection.box?.[0] || 0}, Y1=
-                                      {detection.box?.[1] || 0}, X2=
-                                      {detection.box?.[2] || 0}, Y2=
-                                      {detection.box?.[3] || 0}
-                                    </p>
-                                    <p>
-                                      Width:{" "}
-                                      {(detection.box?.[2] || 0) -
-                                        (detection.box?.[0] || 0)}
-                                      px, Height:{" "}
-                                      {(detection.box?.[3] || 0) -
-                                        (detection.box?.[1] || 0)}
-                                      px
-                                    </p>
-                                  </div>
-                                )
-                              )}
-                            </div>
+                            <img
+                              src={
+                                analysisResults.phase2.blackheads.result_image
+                              }
+                              alt="Blackheads img"
+                              className={"border-purple-500 bg-purple-500/20"}
+                            />
                           </div>
-                        ) : (
-                          <p>No blackheads detected</p>
                         )}
-                      </div>
 
-                      {/* Dark Circles Results */}
-                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                        <h4 className="font-bold mb-2">Dark Circles</h4>
-                        {analysisResults?.phase2?.dark_circles?.detections
+                        {/* Acne Results */}
+                        {analysisResults?.phase2?.acne?.result_image !==
+                          null && (
+                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                            <h4 className="font-bold mb-2">Acne</h4>
+
+                            <img
+                              src={analysisResults.phase2.acne.result_image}
+                              alt="Blackheads img"
+                            />
+                          </div>
+                        )}
+
+                        {/* Dark Circles Results */}
+                        {analysisResults?.phase2?.dark_circles?.result_image !==
+                          null && (
+                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                            <h4 className="font-bold mb-2">Dark Circles</h4>
+                            {/* {analysisResults?.phase2?.dark_circles?.detections
                           ?.length > 0 ? (
                           <div>
                             <p className="mb-2">
@@ -600,13 +584,22 @@ const Analysis: React.FC = () => {
                           </div>
                         ) : (
                           <p>No dark circles detected</p>
+                        )} */}
+                            <img
+                              src={
+                                analysisResults.phase2.dark_circles.result_image
+                              }
+                              alt="Blackheads img"
+                            />
+                          </div>
                         )}
-                      </div>
 
-                      {/* Pigmentation Results */}
-                      <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
-                        <h4 className="font-bold mb-2">Pigmentation</h4>
-                        {analysisResults?.phase2?.pigmentation?.detections
+                        {/* Pigmentation Results */}
+                        {analysisResults?.phase2?.pigmentation?.result_image !==
+                          null && (
+                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                            <h4 className="font-bold mb-2">Pigmentation</h4>
+                            {/* {analysisResults?.phase2?.pigmentation?.detections
                           ?.length > 0 ? (
                           <div>
                             <p className="mb-2">
@@ -647,19 +640,32 @@ const Analysis: React.FC = () => {
                           </div>
                         ) : (
                           <p>No pigmentation detected</p>
+                        )} */}
+                            <img
+                              src={
+                                analysisResults.phase2.pigmentation.result_image
+                              }
+                              alt="Blackheads img"
+                            />
+                          </div>
+                        )}
+
+                        {/* wrinkles Results */}
+                        {analysisResults?.phase2?.wrinkles?.result_image !==
+                          null && (
+                          <div className="bg-white/70 dark:bg-skin-dark-charcoal/70 p-4 rounded-lg">
+                            <h4 className="font-bold mb-2">Wrinkles</h4>
+
+                            <img
+                              src={analysisResults.phase2.wrinkles.result_image}
+                              alt="Blackheads img"
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Recommendations */}
-              <div className="glass-card p-8 rounded-xl">
-                <h2 className="text-2xl font-bold mb-6 text-center font-playfair">
-                  {t("analysis.recommendations")}
-                </h2>
-
                 <div className="mt-8 text-center">
                   <Button
                     variant="outline"
@@ -673,6 +679,8 @@ const Analysis: React.FC = () => {
                   </Button> */}
                 </div>
               </div>
+
+              {/* Recommendations */}
             </div>
           )}
         </div>

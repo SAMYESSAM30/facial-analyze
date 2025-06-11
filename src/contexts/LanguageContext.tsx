@@ -109,6 +109,7 @@ const translations = {
     "footer.links": "Quick Links",
     "footer.contact": "Contact Us",
     "footer.rights": "All rights reserved.",
+    "analysis.detailed_results": "Detailed Results",
   },
   ar: {
     "nav.home": "الرئيسية",
@@ -202,6 +203,7 @@ const translations = {
     "footer.links": "روابط سريعة",
     "footer.contact": "تواصل معنا",
     "footer.rights": "جميع الحقوق محفوظة.",
+    "analysis.detailed_results": "نتايج تفصيلية",
   },
 };
 

@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import TeamSection from "@/components/ui/TeamSection";
 
 const Index: React.FC = () => {
   const { t } = useLanguage();
@@ -163,128 +164,8 @@ const Index: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Slider Section */}
-      {/* <section className="py-20 px-4 md:px-6 bg-skin-pink-light/30 dark:bg-skin-dark-gray/70">
-        <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 font-playfair">
-            {t("testimonials.title")}
-          </h2>
-          <p className="text-center max-w-2xl mx-auto mb-12 text-gray-700 dark:text-gray-300">
-            {t("testimonials.subtitle")}
-          </p>
-
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full max-w-5xl mx-auto"
-          >
-            <CarouselContent>
-              {testimonials.map((testimonial, index) => (
-                <CarouselItem
-                  key={index}
-                  className="md:basis-1/2 lg:basis-1/3 pl-4"
-                >
-                  <div className="p-1">
-                    <Card className="glass-card border-0 h-full">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-full overflow-hidden">
-                            <img
-                              src={testimonial.image}
-                              alt={testimonial.name}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg">
-                              {testimonial.name}
-                            </CardTitle>
-                            <div className="flex mt-1">
-                              {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  size={14}
-                                  className="text-yellow-400 fill-yellow-400"
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-700 dark:text-gray-300">
-                          "{testimonial.text}"
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-1" />
-            <CarouselNext className="right-1" />
-          </Carousel>
-        </div>
-      </section> */}
-
-      {/* Featured Products Section */}
-      {/* <section className="py-20 px-4 md:px-6 bg-white dark:bg-skin-dark">
-        <div className="container mx-auto">
-          <div className="flex flex-wrap items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold font-playfair">
-                {t("products.featured")}
-              </h2>
-              <p className="mt-3 text-gray-700 dark:text-gray-300 max-w-xl">
-                {t("products.featuredDesc")}
-              </p>
-            </div>
-            <Button asChild variant="outline" className="mt-4 lg:mt-0">
-              <Link to="/products" className="flex items-center gap-2">
-                {t("products.viewAll")}
-                <ArrowRight size={16} />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
-              <Card key={index} className="overflow-hidden animated-card">
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                </div>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{product.name}</CardTitle>
-                    <span className="text-xs px-2 py-1 bg-skin-purple/20 dark:bg-skin-purple/40 rounded-full">
-                      {product.category}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    {product.description}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full btn-primary">
-                    <Link to={`/products`}>{t("products.view")}</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
       {/* About Preview Section */}
-      <section className="py-20 px-4 md:px-6 bg-skin-pink-light/50 dark:bg-skin-dark-gray">
+      <section className="py-20 px-4 md:px-6 bg-skin-pink-light/50 dark:bg-skin-dark">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
@@ -309,6 +190,8 @@ const Index: React.FC = () => {
         </div>
       </section>
 
+      {/* Team Section */}
+      <TeamSection />
       <Footer />
     </div>
   );

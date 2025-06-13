@@ -2,6 +2,7 @@ import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import TeamSection from "@/components/ui/TeamSection";
 
 const About: React.FC = () => {
   const { t } = useLanguage();
@@ -85,6 +86,7 @@ const About: React.FC = () => {
           </div>
         </div>
       </section>
+      <TeamSection />
 
       {/* Research Section */}
       <section className="py-20 px-4 md:px-6 bg-white dark:bg-skin-dark">

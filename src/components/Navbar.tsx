@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Navbar: React.FC = () => {
-  const { language, toggleLanguage, t } = useLanguage();
+  const { language, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = React.useState(false);
-  const [showCover, setShowCover] = React.useState(false);
 
   // Handle navbar background on scroll
   React.useEffect(() => {
@@ -70,20 +69,6 @@ const Navbar: React.FC = () => {
                   <Moon className="h-[1.2rem] w-[1.2rem]" />
                 ) : (
                   <Sun className="h-[1.2rem] w-[1.2rem]" />
-                )}
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowCover(!showCover)}
-                className="group"
-                aria-label="Toggle cover menu"
-              >
-                {showCover ? (
-                  <ChevronUp className="h-[1.2rem] w-[1.2rem] group-hover:text-skin-purple transition-all" />
-                ) : (
-                  <ChevronDown className="h-[1.2rem] w-[1.2rem] group-hover:text-skin-purple transition-all" />
                 )}
               </Button>
             </div>

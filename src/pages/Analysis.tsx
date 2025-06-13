@@ -228,17 +228,7 @@ const Analysis: React.FC = () => {
         className={`absolute border-2 ${
           boxColors[type] || "border-purple-500 bg-purple-500/20"
         }`}
-        // style={{
-        //   left: `${detection.box?.[0] || 0}px`,
-        //   top: `${detection.box?.[1] || 0}px`,
-        //   width: `${(detection.box?.[2] || 0) - (detection.box?.[0] || 0)}px`,
-        //   height: `${(detection.box?.[3] || 0) - (detection.box?.[1] || 0)}px`,
-        // }}
-      >
-        {/* <span className="absolute -top-6 left-0 text-xs font-medium text-white bg-black/70 px-1 rounded">
-          {type} {index + 1}
-        </span> */}
-      </div>
+      ></div>
     ));
   };
 
@@ -477,7 +467,7 @@ const Analysis: React.FC = () => {
                               <img
                                 src={item.result_image}
                                 alt={item.issue}
-                                className="w-full h-full max-h-64 rounded-lg object-cover shadow-md"
+                                className="w-full h-auto rounded-lg object-contain shadow-md"
                               />
                             </div>
 
